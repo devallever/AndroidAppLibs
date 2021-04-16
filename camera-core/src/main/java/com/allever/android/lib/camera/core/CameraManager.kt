@@ -1,5 +1,6 @@
 package com.allever.android.lib.camera.core
 
+import android.content.Context
 import android.view.View
 
 object CameraManager : ICameraProxy {
@@ -32,5 +33,9 @@ object CameraManager : ICameraProxy {
 
     override fun setCameraListener(listener: CameraListener?) {
         cameraProxy.setCameraListener(listener)
+    }
+
+    override fun getDisplayOrientation(context: Context?, cameraId: Int): Int {
+        return cameraProxy.getDisplayOrientation(context, cameraId)
     }
 }

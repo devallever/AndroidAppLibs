@@ -1,10 +1,13 @@
 package com.allever.android.lib.camera
 
+import android.content.Context
 import android.graphics.ImageFormat
 import android.hardware.Camera
 import android.util.Log
+import android.view.Surface
 import android.view.SurfaceView
 import android.view.View
+import android.view.WindowManager
 import com.allever.android.lib.camera.core.CameraListener
 import com.allever.android.lib.camera.core.ICameraProxy
 import java.lang.ref.WeakReference
@@ -54,11 +57,9 @@ class CameraProxyImpl : ICameraProxy {
             val camera = mCamera!!
 
             //获取参数
-            val cameraParams = camera.parameters
-            cameraParams.previewFormat = ImageFormat.NV21
-            camera.parameters = cameraParams
-
-            camera.parameters?.supportedPreviewSizes
+            val params = camera.parameters
+            params.previewFormat = ImageFormat.NV21
+            camera.parameters = params
 
             when (mPreviewRef.get()) {
                 is SurfaceView -> {
@@ -66,6 +67,7 @@ class CameraProxyImpl : ICameraProxy {
                 }
             }
 
+            camera.setDisplayOrientation(getDisplayOrientation(mPreviewRef.get()?.context, mCameraId))
             camera.setPreviewCallback(mPreviewCallback)
             camera.startPreview()
         } catch (e: Exception) {
@@ -97,6 +99,31 @@ class CameraProxyImpl : ICameraProxy {
 
     override fun setCameraListener(listener: CameraListener?) {
         mListener = listener
+    }
+
+    override fun getDisplayOrientation(context: Context?, cameraId: Int): Int {
+        val info = Camera.CameraInfo()
+        log("getDisplayOrientation: cameraId = $cameraId")
+        Camera.getCameraInfo(cameraId, info)
+        val windowManager = context?.getSystemService(Context.WINDOW_SERVICE) as? WindowManager
+        val rotation = windowManager?.defaultDisplay?.rotation
+        var degrees = 0
+        when (rotation) {
+            Surface.ROTATION_0 -> degrees = 0
+            Surface.ROTATION_90 -> degrees = 90
+            Surface.ROTATION_180 -> degrees = 180
+            Surface.ROTATION_270 -> degrees = 270
+        }
+        var result: Int
+        //前置
+        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            result = (info.orientation + degrees) % 360
+            result = (360 - result) % 360
+        } else {
+            result = (info.orientation - degrees + 360) % 360
+        }//后置
+
+        return result
     }
 
     private fun getCameraId(): Int {

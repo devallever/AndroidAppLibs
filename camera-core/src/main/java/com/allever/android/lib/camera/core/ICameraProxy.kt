@@ -1,5 +1,6 @@
 package com.allever.android.lib.camera.core
 
+import android.content.Context
 import android.view.View
 
 interface ICameraProxy {
@@ -34,5 +35,10 @@ interface ICameraProxy {
      * 设置监听
      */
     fun setCameraListener(listener: CameraListener?)
+
+    /**
+     * 设置旋转
+     */
+    fun getDisplayOrientation(context: Context?, cameraId: Int): Int
 
 }
