@@ -1,0 +1,7 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.allever.android.lib.camera">
+
+    <application>
+        <activity android:name=".demo.CameraMainActivity"/>
+    </application>
+</manifest>
