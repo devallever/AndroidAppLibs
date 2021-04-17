@@ -25,6 +25,8 @@ android {
 }
 
 dependencies {
-    api project(path: ':core')
     implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "androidx.core:core-ktx:$kotlin_core_version"
+    implementation "androidx.appcompat:appcompat:$android_compact_version"
 }

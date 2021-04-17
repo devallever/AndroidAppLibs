@@ -31,6 +31,8 @@ interface ICameraProxy {
      */
     fun setPreview(view: View)
 
+    fun takePicture()
+
     /**
      * 设置监听
      */
@@ -40,5 +42,15 @@ interface ICameraProxy {
      * 设置旋转
      */
     fun getDisplayOrientation(context: Context?, cameraId: Int): Int
+
+    /**
+     * 获取支持的预览大小
+     */
+    fun getSupportPreviewSize(): MutableList<Size>
+
+    /**
+     * 获取支持的图片大小
+     */
+    fun getSupportPictureSize(): MutableList<Size>
 
 }

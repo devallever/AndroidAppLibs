@@ -22,10 +22,22 @@
                 android:layout_height="wrap_content"/>
 
             <Button
+                android:id="@+id/btnOpenFrontCamera"
+                android:text="打开前置相机"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <Button
                 android:id="@+id/btnCloseCamera"
                 android:text="关闭相机"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/btnTackPicture"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="拍照"/>
         </LinearLayout>
     </ScrollView>
 

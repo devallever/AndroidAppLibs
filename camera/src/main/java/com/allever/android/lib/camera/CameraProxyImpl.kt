@@ -1,18 +1,24 @@
 package com.allever.android.lib.camera
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.ImageFormat
 import android.hardware.Camera
-import android.util.Log
 import android.view.Surface
 import android.view.SurfaceView
 import android.view.View
 import android.view.WindowManager
 import com.allever.android.lib.camera.core.CameraListener
+import com.allever.android.lib.camera.core.CameraManager
 import com.allever.android.lib.camera.core.ICameraProxy
+import com.allever.android.lib.camera.core.Size
 import java.lang.ref.WeakReference
+import java.util.concurrent.Executors
 
 class CameraProxyImpl : ICameraProxy {
+
+    private val mExecutor = Executors.newSingleThreadExecutor()
 
     private var mCamera: Camera? = null
 
@@ -26,9 +32,29 @@ class CameraProxyImpl : ICameraProxy {
     private lateinit var mPreviewRef: WeakReference<View>
 
     private val mPreviewCallback = Camera.PreviewCallback { data, camera ->
-        log("onPreviewFrame")
+//        log("onPreviewFrame")
         val format = camera?.parameters?.previewFormat
         mListener?.onPreview(data, format!!)
+    }
+
+    private val mPictureCallback = Camera.PictureCallback { data, camera ->
+        if (data == null || mListener == null) {
+            return@PictureCallback
+        }
+
+        mExecutor.execute {
+            var additionalDegree = 0
+            if (mCameraId == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                additionalDegree = 180
+            }
+            val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
+            val degree: Int = getDisplayOrientation(mPreviewRef.get()?.context, mCameraId) + additionalDegree
+
+            val rotateBitmap: Bitmap? = CameraManager.getRotateBitmap(bitmap, degree.toFloat())
+            mListener?.onTakePicture(data, rotateBitmap, mCamera?.parameters?.pictureFormat!!)
+            closeCamera()
+            openCamera(mCameraId)
+        }
     }
 
     override fun openCamera() {
@@ -42,8 +68,17 @@ class CameraProxyImpl : ICameraProxy {
     }
 
     override fun openCamera(cameraId: Int) {
+        if (mCamera != null) {
+            return
+        }
         mCameraId = cameraId
-        log("打开相机：$mCameraId" )
+        val cameraIdList = CameraManager.getCameraIdList(mPreviewRef.get()?.context)
+        val cameraCount = cameraIdList.size
+        log("相机数 = $cameraCount")
+        cameraIdList.forEach {
+            log("相机id：$it")
+        }
+        log("打开相机：$mCameraId")
         try {
             if (mCamera == null) {
                 mCamera = Camera.open(mCameraId)
@@ -58,7 +93,36 @@ class CameraProxyImpl : ICameraProxy {
 
             //获取参数
             val params = camera.parameters
+
+            //设置预览格式
             params.previewFormat = ImageFormat.NV21
+            //设置预览大小
+            val previewSize = params.previewSize
+            log("当前预览大小：${previewSize.width} x ${previewSize.height}")
+            getSupportPreviewSize()
+
+            //设置图片大小
+            val pictureSize = params.pictureSize
+            log("当前图片大小：${pictureSize.width} x ${pictureSize.height}")
+            getSupportPictureSize()
+
+            //设置自动对焦
+            val supportedFocusModes: List<String> = params.supportedFocusModes
+            if (supportedFocusModes.isNotEmpty()) {
+                when {
+                    supportedFocusModes.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE) -> {
+                        params.focusMode = Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE
+                    }
+                    supportedFocusModes.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO) -> {
+                        params.focusMode = Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO
+                    }
+                    supportedFocusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO) -> {
+                        params.focusMode = Camera.Parameters.FOCUS_MODE_AUTO
+                    }
+                }
+            }
+
+
             camera.parameters = params
 
             when (mPreviewRef.get()) {
@@ -67,7 +131,12 @@ class CameraProxyImpl : ICameraProxy {
                 }
             }
 
-            camera.setDisplayOrientation(getDisplayOrientation(mPreviewRef.get()?.context, mCameraId))
+            camera.setDisplayOrientation(
+                getDisplayOrientation(
+                    mPreviewRef.get()?.context,
+                    mCameraId
+                )
+            )
             camera.setPreviewCallback(mPreviewCallback)
             camera.startPreview()
         } catch (e: Exception) {
@@ -95,6 +164,10 @@ class CameraProxyImpl : ICameraProxy {
 
     override fun setPreview(view: View) {
         mPreviewRef = WeakReference(view)
+    }
+
+    override fun takePicture() {
+        mCamera?.takePicture(null, null, mPictureCallback)
     }
 
     override fun setCameraListener(listener: CameraListener?) {
@@ -126,15 +199,32 @@ class CameraProxyImpl : ICameraProxy {
         return result
     }
 
+    override fun getSupportPreviewSize(): MutableList<Size> {
+        val sizeList = getSizeList(mCamera?.parameters?.supportedPreviewSizes)
+        sizeList.forEach {
+            log("cameraId : $mCameraId 支持预览大小 = ${it.width} x ${it.height}")
+        }
+        return sizeList
+    }
+
+    override fun getSupportPictureSize(): MutableList<Size> {
+        val sizeList = getSizeList(mCamera?.parameters?.supportedPictureSizes)
+        sizeList.forEach {
+            log("cameraId : $mCameraId 支持图片大小 = ${it.width} x ${it.height}")
+        }
+        return sizeList
+    }
+
+    private fun getSizeList(supportSizeList: List<Camera.Size>?): MutableList<Size> {
+        val sizeList = mutableListOf<Size>()
+        supportSizeList?.forEach { supportSize ->
+            val size = Size(supportSize.width, supportSize.height)
+            sizeList.add(size)
+        }
+        return sizeList
+    }
+
     private fun getCameraId(): Int {
         return Camera.CameraInfo.CAMERA_FACING_BACK;
-    }
-
-    private fun log(msg: String) {
-        Log.d(CameraProxyImpl::class.java.simpleName, msg)
-    }
-
-    private fun loge(msg: String) {
-        Log.e(CameraProxyImpl::class.java.simpleName, msg)
     }
 }
