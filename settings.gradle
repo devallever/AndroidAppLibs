@@ -1,3 +1,5 @@
+include ':camerax'
+include ':camera2'
 include ':camera'
 include ':camera-core'
 include ':core'

@@ -11,10 +11,8 @@ import android.view.Surface
 import android.view.SurfaceView
 import android.view.View
 import android.view.WindowManager
-import com.allever.android.lib.camera.core.CameraListener
-import com.allever.android.lib.camera.core.CameraManager
-import com.allever.android.lib.camera.core.ICameraProxy
-import com.allever.android.lib.camera.core.Size
+import androidx.lifecycle.LifecycleOwner
+import com.allever.android.lib.camera.core.*
 import java.lang.ref.WeakReference
 import java.util.*
 import java.util.concurrent.Executors
@@ -31,7 +29,7 @@ class CameraProxyImpl : ICameraProxy {
     /**
      * 相机id， 默认使用后置
      */
-    private var mCameraId = Camera.CameraInfo.CAMERA_FACING_BACK
+    private var mCameraId = CameraInfo.CAMERA_FACING_BACK
 
     private lateinit var mPreviewRef: WeakReference<View>
 
@@ -74,15 +72,18 @@ class CameraProxyImpl : ICameraProxy {
         }
 
         //获取合适的cameraId 后置->前置
-        val cameraId = getCameraId()
-        openCamera(cameraId)
+        val cameraFacing = getCameraFacing()
+        openCamera(cameraFacing)
     }
 
-    override fun openCamera(cameraId: Int) {
+    override fun openCamera(@CameraFacing.STATE cameraFacing: Int) {
         if (mCamera != null) {
             return
         }
-        mCameraId = cameraId
+        mCameraId = when(cameraFacing) {
+            CameraFacing.FACE_BACK -> CameraInfo.CAMERA_FACING_BACK
+            else -> CameraInfo.CAMERA_FACING_FRONT
+        }
         val cameraIdList = CameraManager.getCameraIdList(mPreviewRef.get()?.context)
         val cameraCount = cameraIdList.size
         log("相机数 = $cameraCount")
@@ -184,6 +185,10 @@ class CameraProxyImpl : ICameraProxy {
         mPreviewRef = WeakReference(view)
     }
 
+    override fun setLifeCycleOwner(lifecycleOwner: LifecycleOwner) {
+
+    }
+
     override fun takePicture() {
         mCamera?.takePicture(null, null, mPictureCallback)
     }
@@ -244,8 +249,8 @@ class CameraProxyImpl : ICameraProxy {
         return sizeList
     }
 
-    private fun getCameraId(): Int {
-        return Camera.CameraInfo.CAMERA_FACING_BACK;
+    private fun getCameraFacing(): Int {
+        return CameraFacing.FACE_BACK
     }
 
     private fun getBestSupportedSize(

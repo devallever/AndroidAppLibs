@@ -2,6 +2,8 @@ package com.allever.android.lib.camera.core
 
 import android.content.Context
 import android.view.View
+import androidx.annotation.NonNull
+import androidx.lifecycle.LifecycleOwner
 
 interface ICameraProxy {
 
@@ -12,9 +14,9 @@ interface ICameraProxy {
 
     /**
      * 打开指定相机
-     * @param cameraId 相机Id
+     * @param cameraId
      */
-    fun openCamera(cameraId: Int)
+    fun openCamera(@CameraFacing.STATE cameraFacing: Int)
 
     /**
      * 关闭相机
@@ -30,6 +32,8 @@ interface ICameraProxy {
      * 设置预览View
      */
     fun setPreview(view: View)
+
+    fun setLifeCycleOwner(lifecycleOwner: LifecycleOwner)
 
     fun takePicture()
 

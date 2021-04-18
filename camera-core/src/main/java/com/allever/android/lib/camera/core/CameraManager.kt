@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.hardware.camera2.CameraManager
 import android.view.View
+import androidx.lifecycle.LifecycleOwner
 import java.io.*
 
 object CameraManager : ICameraProxy {
@@ -19,8 +20,8 @@ object CameraManager : ICameraProxy {
         cameraProxy.openCamera()
     }
 
-    override fun openCamera(cameraId: Int) {
-        cameraProxy.openCamera(cameraId)
+    override fun openCamera(@CameraFacing.STATE cameraFacing: Int) {
+        cameraProxy.openCamera(cameraFacing)
     }
 
     override fun closeCamera() {
@@ -33,6 +34,10 @@ object CameraManager : ICameraProxy {
 
     override fun setPreview(view: View) {
         cameraProxy.setPreview(view)
+    }
+
+    override fun setLifeCycleOwner(lifecycleOwner: LifecycleOwner) {
+        cameraProxy.setLifeCycleOwner(lifecycleOwner)
     }
 
     override fun takePicture() {
@@ -100,10 +105,7 @@ object CameraManager : ICameraProxy {
      * @param filePathName
      * @return true for save successful, false for save failed.
      */
-    private fun saveByteToSDFile(
-        byteData: ByteArray?,
-        filePathName: String?
-    ): Boolean {
+    private fun saveByteToSDFile(byteData: ByteArray?, filePathName: String?): Boolean {
         var result = false
         try {
             val newFile: File? = createNewFile(filePathName, false)
