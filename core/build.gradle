@@ -30,4 +30,8 @@ dependencies {
     api "androidx.core:core-ktx:$kotlin_core_version"
     api "androidx.appcompat:appcompat:$android_compact_version"
 
+    //coroutine
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
+
 }

@@ -12,6 +12,8 @@ import android.provider.MediaStore
 import android.text.TextUtils
 import com.allever.android.lib.core.app.App
 import com.allever.android.lib.core.log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.*
 
 object FileHelper {
@@ -40,10 +42,10 @@ object FileHelper {
      * @param path 路径
      * @return 文本内容
      */
-    fun readTextFile(path: String?): String {
+    suspend fun readTextFile(path: String?): String = withContext(Dispatchers.IO){
         var result = ""
 
-        if (!checkExist(path)) return result
+        if (!checkExist(path)) return@withContext result
 
         try {
             result = readTextFileFromInputStream(
@@ -53,7 +55,7 @@ object FileHelper {
             e.printStackTrace()
         }
 
-        return result
+        return@withContext result
     }
 
     /***
@@ -61,10 +63,10 @@ object FileHelper {
      * @param path 路径
      * @return 文本内容
      */
-    fun readAssetsTextFile(path: String?): String {
+    suspend fun readAssetsTextFile(path: String?): String = withContext(Dispatchers.IO) {
         var result = ""
 
-        if (checkExist(path)) return result
+        if (checkExist(path)) return@withContext result
 
         try {
             val assetManager = App.context.assets
@@ -75,10 +77,13 @@ object FileHelper {
         } catch (e: IOException) {
             e.printStackTrace()
         }
-        return result
+        return@withContext result
     }
 
-    private fun readTextFileFromInputStream(inputStream: InputStream): String {
+    /**
+     *
+     */
+    suspend fun readTextFileFromInputStream(inputStream: InputStream): String = withContext(Dispatchers.IO) {
         var result = ""
         val bufferedInputStream = BufferedInputStream(inputStream)
         val byteArrayOutputStream = ByteArrayOutputStream()
@@ -98,7 +103,7 @@ object FileHelper {
             inputStream.close()
         }
 
-        return result
+        return@withContext result
     }
 
     /**

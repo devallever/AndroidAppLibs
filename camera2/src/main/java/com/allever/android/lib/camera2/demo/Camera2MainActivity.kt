@@ -1,4 +1,4 @@
-package com.allever.android.lib.camera.demo
+package com.allever.android.lib.camera2.demo
 
 import android.graphics.Bitmap
 import android.graphics.Paint
@@ -6,15 +6,15 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.allever.android.lib.camera.CameraProxyImpl
-import com.allever.android.lib.camera.R
 import com.allever.android.lib.camera.core.CameraListener
 import com.allever.android.lib.camera.core.CameraManager
-import com.allever.android.lib.camera.log
-import kotlinx.android.synthetic.main.activity_camera.*
+import com.allever.android.lib.camera2.Camera2ProxyImpl
+import com.allever.android.lib.camera2.R
+import com.allever.android.lib.camera2.log
+import kotlinx.android.synthetic.main.activity_camera2.*
 import java.io.File
 
-class CameraMainActivity : AppCompatActivity() {
+class Camera2MainActivity : AppCompatActivity() {
 
     private val srcRect = Rect()
     private val dstRectF = RectF()
@@ -22,11 +22,11 @@ class CameraMainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_camera)
+        setContentView(R.layout.activity_camera2)
 
         CameraManager.init(this)
 
-        CameraManager.injectProxy(CameraProxyImpl())
+        CameraManager.injectProxy(Camera2ProxyImpl())
 
         surfaceView.post {
             CameraManager.setPreview(surfaceView)
@@ -36,7 +36,7 @@ class CameraMainActivity : AppCompatActivity() {
             }
 
             override fun onTakePicture(data: ByteArray?, bitmap: Bitmap?, imageFormat: Int) {
-                val path = this@CameraMainActivity.externalCacheDir?.absolutePath + File.separator + System.currentTimeMillis() + ".jpg"
+                val path = this@Camera2MainActivity.externalCacheDir?.absolutePath + File.separator + System.currentTimeMillis() + ".jpg"
                 val result = CameraManager.saveBitmap2File(
                     bitmap,
                     path

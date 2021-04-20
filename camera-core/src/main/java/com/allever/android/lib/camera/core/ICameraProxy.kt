@@ -2,7 +2,6 @@ package com.allever.android.lib.camera.core
 
 import android.content.Context
 import android.view.View
-import androidx.annotation.NonNull
 import androidx.lifecycle.LifecycleOwner
 
 interface ICameraProxy {

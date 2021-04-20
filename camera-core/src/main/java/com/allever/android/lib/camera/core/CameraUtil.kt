@@ -12,7 +12,7 @@ import android.view.WindowManager
 /**
  * Created by Allever on 18/5/11.
  */
-
+@Deprecated("")
 object CameraUtil {
     private const val TAG = "CameraUtil"
     /**

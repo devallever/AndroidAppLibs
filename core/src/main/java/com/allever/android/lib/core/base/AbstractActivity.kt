@@ -6,16 +6,26 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.allever.android.lib.core.R
 import com.allever.android.lib.core.helper.ActivityHelper
+import com.allever.android.lib.core.helper.CoroutineHelper
 import com.allever.android.lib.core.helper.HandlerHelper
 import com.allever.android.lib.core.log
 import com.allever.android.lib.core.toast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import java.lang.ref.WeakReference
 
 abstract class AbstractActivity : AppCompatActivity() {
 
-    protected val mHandler = HandlerHelper.mainHandler
+    protected val mHandler by lazy {
+        HandlerHelper.mainHandler
+    }
 
     private var mWeakRefActivity: WeakReference<Activity>? = null
+
+    protected val mainCoroutine by lazy {
+        CoroutineHelper.mainCoroutine
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

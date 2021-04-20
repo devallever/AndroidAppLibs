@@ -11,6 +11,11 @@ import java.io.*
 object CameraManager : ICameraProxy {
 
     private lateinit var cameraProxy: ICameraProxy
+    lateinit var context: Context
+
+    fun init(context: Context) {
+        this.context = context.applicationContext
+    }
 
     fun injectProxy(cameraProxy: ICameraProxy) {
         this.cameraProxy = cameraProxy

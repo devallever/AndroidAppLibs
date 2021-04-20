@@ -25,6 +25,7 @@ class CameraXMainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camerax)
 
+
         CameraManager.injectProxy(CameraXProxyImpl())
 
         previewView.post {

@@ -22,14 +22,27 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+
+    //Cannot inline bytecode built with JVM target 1.8 into bytecode that is being built with JVM target 1.6.
+    // Please specify proper '-jvm-target' option
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+
 }
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "androidx.core:core-ktx:$kotlin_core_version"
-    implementation "androidx.appcompat:appcompat:$android_compact_version"
-
-    // EXIF Interface
-    api 'androidx.exifinterface:exifinterface:1.2.0'
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation project(path: ':camera-core')
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.4'
 }
