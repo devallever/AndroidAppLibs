@@ -28,7 +28,7 @@ import java.util.*
 /**
  * 应用中所有Activity的管理器，可用于一键杀死所有Activity。
  *
- * @author guolin
+ * @author guolin`
  * @since 18/2/8
  */
 object ActivityHelper {
@@ -62,6 +62,7 @@ object ActivityHelper {
 
     fun <T : Activity> startActivity(context: Context, clazz: Class<T>) {
         val intent = Intent(context, clazz)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
     }
 

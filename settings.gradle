@@ -1,3 +1,5 @@
+include ':notchcompat'
+include ':livedatabus'
 include ':camerax'
 include ':camera2'
 include ':camera'
