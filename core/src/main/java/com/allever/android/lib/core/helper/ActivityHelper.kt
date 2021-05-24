@@ -60,16 +60,18 @@ object ActivityHelper {
         }
     }
 
-    fun <T : Activity> startActivity(context: Context, clazz: Class<T>) {
+    fun <T : Activity> startActivity(clazz: Class<T>) {
+        val context = getTopActivity()
         val intent = Intent(context, clazz)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        context.startActivity(intent)
+        context?.startActivity(intent)
     }
 
-    inline fun <reified T> startActivity(context: Context, block: Intent.() -> Unit) {
+    inline fun <reified T> startActivity(block: Intent.() -> Unit) {
+        val context = getTopActivity()
         val intent = Intent(context, T::class.java)
         intent.block()
-        context.startActivity(intent)
+        context?.startActivity(intent)
     }
 
     fun <T : Activity> startActivityForResult(

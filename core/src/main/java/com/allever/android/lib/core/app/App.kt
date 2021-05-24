@@ -1,5 +1,6 @@
 package com.allever.android.lib.core.app
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 
@@ -10,6 +11,7 @@ open class App : Application() {
     }
 
     companion object {
+        @SuppressLint("StaticFieldLeak")
         lateinit var context: Context
         fun init(context: Context) {
             this.context = context.applicationContext

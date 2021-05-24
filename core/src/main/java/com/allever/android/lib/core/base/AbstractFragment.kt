@@ -12,7 +12,9 @@ import com.allever.android.lib.core.log
 
 abstract class AbstractFragment : Fragment() {
 
-    protected val mHandler = HandlerHelper.mainHandler
+    protected val mHandler by lazy {
+        HandlerHelper.mainHandler
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
