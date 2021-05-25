@@ -9,6 +9,7 @@ import com.allever.android.lib.core.helper.ActivityHelper
 import com.allever.android.lib.core.helper.CoroutineHelper
 import com.allever.android.lib.core.helper.HandlerHelper
 import com.allever.android.lib.core.log
+import com.allever.android.lib.mvp.MvpActivity
 import com.allever.android.lib.mvvm.MvvmActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,7 +21,7 @@ class MainActivity : AbstractActivity() {
         setContentView(R.layout.activity_main)
 
         HandlerHelper.mainHandler.postDelayed({
-            ActivityHelper.startActivity(MvvmActivity::class.java)
+            ActivityHelper.startActivity(MvpActivity::class.java)
         }, 1000)
 
         log("main thread id = ${android.os.Process.myTid()}")
