@@ -6,12 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.allever.android.lib.core.base.AbstractFragment
 import java.lang.reflect.ParameterizedType
 
-abstract class BaseMvvmFragment<VM : ViewModel, DB : ViewDataBinding> : Fragment() {
+abstract class BaseMvvmFragment<VM : ViewModel, DB : ViewDataBinding> : AbstractFragment() {
 
     protected lateinit var mBinding: DB
     protected lateinit var mViewModel: VM
