@@ -1,9 +1,9 @@
 package com.allever.android.lib.mvp
 
-import com.allever.android.lib.core.toast
 import com.allever.android.lib.mvp.base.BaseMvpActivity
+import com.allever.android.lib.mvp.databinding.ActivityMvpBinding
 
-class MvpActivity: BaseMvpActivity<MvpView, MvpPresenter>(), MvpView {
+class MvpActivity: BaseMvpActivity<MvpView, MvpPresenter, ActivityMvpBinding>(), MvpView {
 
     override fun getPresenter(): MvpPresenter = MvpPresenter()
 
@@ -14,6 +14,6 @@ class MvpActivity: BaseMvpActivity<MvpView, MvpPresenter>(), MvpView {
     }
 
     override fun updateView(text: String) {
-        toast(text)
+        mBinding.tvHello.text = (text)
     }
 }

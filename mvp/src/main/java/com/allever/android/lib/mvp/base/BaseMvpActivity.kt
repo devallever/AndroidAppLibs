@@ -1,15 +1,19 @@
 package com.allever.android.lib.mvp.base
 
 import android.os.Bundle
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import com.allever.android.lib.core.base.AbstractActivity
 
-abstract class BaseMvpActivity<V: BaseView, P: BasePresenter<V>>: AbstractActivity(){
+abstract class BaseMvpActivity<V: BaseView, P: BasePresenter<V>,  DB : ViewDataBinding>: AbstractActivity(){
 
     protected lateinit var mPresenter: P
+    protected lateinit var mBinding: DB
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(getLayoutId())
+        mBinding = DataBindingUtil.setContentView(this, getLayoutId())
+        mBinding.lifecycleOwner = this
         mPresenter = getPresenter()
         mPresenter.attach(this as V)
         init()
