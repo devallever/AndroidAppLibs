@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.allever.android.lib.mvp">
+    package="com.everdeng.android.lib.mvp">
 
     <application>
-        <activity android:name=".MvpActivity"/>
+        <activity android:name="com.everdeng.android.lib.mvp.MvpActivity"/>
     </application>
 
 </manifest>

@@ -6,7 +6,7 @@
 
         <variable
             name="mvvmViewModel"
-            type="com.allever.android.lib.mvvm.MvvmViewModel" />
+            type="com.everdeng.android.lib.mvvm.MvvmViewModel" />
 
     </data>
 

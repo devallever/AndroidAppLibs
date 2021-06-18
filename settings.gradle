@@ -9,3 +9,4 @@ include ':app'
 rootProject.name = "AndroidAppLibs"
 include ':mvvm'
 include ':mvp'
+include ':network-retrofit-ktx'

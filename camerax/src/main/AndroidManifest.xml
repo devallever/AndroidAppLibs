@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.allever.android.lib.camerax">
+    package="com.everdeng.android.lib.camerax">
 
     <application>
-        <activity android:name=".demo.CameraXMainActivity"/>
+        <activity android:name="com.everdeng.android.lib.camerax.demo.CameraXMainActivity"/>
     </application>
 </manifest>
