@@ -22,8 +22,9 @@ abstract class BaseMvvmActivity<VM : ViewModel, DB : ViewDataBinding> : Abstract
         mViewModel =
             ViewModelProvider(this, object : ViewModelProvider.Factory {
                 override fun <VM : ViewModel?> create(modelClass: Class<VM>): VM {
-                    val clz = (this@BaseMvvmActivity.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<VM>
-                    return clz.getDeclaredConstructor().newInstance()
+                    return modelClass.getDeclaredConstructor().newInstance()
+//                    val clz = (this@BaseMvvmActivity.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<VM>
+//                    return clz.getDeclaredConstructor().newInstance()
                 }
             }).get((this.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<VM>)
         mBinding.setVariable(getBindingVariable(), mViewModel)
