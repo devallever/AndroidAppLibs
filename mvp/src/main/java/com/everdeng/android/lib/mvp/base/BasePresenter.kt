@@ -15,8 +15,8 @@ abstract class BasePresenter<V: BaseView> {
         mViewRef.clear()
     }
 
-    fun getView(): V {
-        return mViewRef.get() as V
+    fun getView(): V? {
+        return mViewRef.get()
     }
 
 }

@@ -10,7 +10,7 @@ class MvpPresenter: BasePresenter<MvpView>() {
         CoroutineHelper.mainCoroutine.launch {
             val result = "HelloHHH"
             delay(2000)
-            getView().updateView(result)
+            getView()?.updateView(result)
         }
     }
 }

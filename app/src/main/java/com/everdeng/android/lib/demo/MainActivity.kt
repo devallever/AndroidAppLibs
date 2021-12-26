@@ -7,6 +7,7 @@ import com.everdeng.android.lib.core.helper.CoroutineHelper
 import com.everdeng.android.lib.core.helper.HandlerHelper
 import com.everdeng.android.lib.core.log
 import com.everdeng.android.lib.mvp.MvpActivity
+import com.everdeng.android.lib.mvvm.MvvmActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -17,7 +18,7 @@ class MainActivity : AbstractActivity() {
         setContentView(R.layout.activity_main)
 
         HandlerHelper.mainHandler.postDelayed({
-            ActivityHelper.startActivity(MvpActivity::class.java)
+            ActivityHelper.startActivity(MvvmActivity::class.java)
         }, 1000)
 
         log("main thread id = ${android.os.Process.myTid()}")
