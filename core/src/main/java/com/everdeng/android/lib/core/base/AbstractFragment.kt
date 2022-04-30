@@ -30,6 +30,7 @@ abstract class AbstractFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        log(this.javaClass.simpleName)
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 

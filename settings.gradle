@@ -6,7 +6,7 @@ include ':camera'
 include ':camera-core'
 include ':core'
 include ':app'
-rootProject.name = "AndroidAppLibs(D)"
+rootProject.name = "AndroidAppLibs"
 include ':mvvm'
 include ':mvp'
 include ':network-retrofit-ktx'
